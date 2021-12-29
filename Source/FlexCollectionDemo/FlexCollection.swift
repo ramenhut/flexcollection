@@ -46,18 +46,18 @@ struct FlexCollection<Content: View> : View {
     private func layoutContent(maxWidth: CGFloat = UIScreen.main.bounds.size.width) -> [[Int]] {
         var result: [[Int]] = Array<Array<Int>>()
         var totalWidth = 0.0
-        
+
         for index in 0..<elementCount {
             if let itemWidth = elementWidths[index] {
-                if (totalWidth + itemWidth + HContentPadding < maxWidth) {
-                    totalWidth += itemWidth + HContentPadding
+                if (totalWidth + itemWidth < maxWidth) {
+                    totalWidth += itemWidth
                     if (result.count == 0 ) {
                         result.append([index])
                     } else {
                         result[result.count - 1].append(index)
                     }
                 } else {
-                    totalWidth = itemWidth + HContentPadding
+                    totalWidth = itemWidth
                     result.append([index])
                 }
             }
@@ -90,6 +90,7 @@ struct FlexCollection<Content: View> : View {
                 ForEach(0..<elementCount, id:\.self) { index in
                     if (elementWidths.count != elementCount) {
                         createElement(index)
+                            .padding(.trailing, HContentPadding)
                             .background(GeometryReader { geometry in
                                 measureView(geometry, index)
                             })
